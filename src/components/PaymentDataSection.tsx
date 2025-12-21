@@ -21,8 +21,8 @@ export function PaymentDataSection({ payment, onChange }: PaymentDataSectionProp
       <div className="bg-white rounded-xl border border-slate-200 p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-              <DollarSign className="text-blue-600 w-5 h-5" />
+            <div className="w-10 h-10 bg-[#11143F]/10 rounded-lg flex items-center justify-center">
+              <DollarSign className="text-[#11143F] w-5 h-5" />
             </div>
             <div>
               <h3 className="text-lg font-semibold text-slate-900">Datos de Pago</h3>
@@ -43,7 +43,7 @@ export function PaymentDataSection({ payment, onChange }: PaymentDataSectionProp
                 className={cn(
                   'flex-1 px-4 py-3 border-2 rounded-lg font-medium transition-all flex items-center justify-center',
                   payment.salaryType === 'monthly'
-                    ? 'border-slate-900 bg-slate-900 text-white'
+                    ? 'border-[#11143F] bg-[#11143F] text-white'
                     : 'border-slate-200 text-slate-600 hover:border-slate-300'
                 )}
               >
@@ -55,7 +55,7 @@ export function PaymentDataSection({ payment, onChange }: PaymentDataSectionProp
                 className={cn(
                   'flex-1 px-4 py-3 border-2 rounded-lg font-medium transition-all flex items-center justify-center',
                   payment.salaryType === 'hourly'
-                    ? 'border-slate-900 bg-slate-900 text-white'
+                    ? 'border-[#11143F] bg-[#11143F] text-white'
                     : 'border-slate-200 text-slate-600 hover:border-slate-300'
                 )}
               >
@@ -110,7 +110,7 @@ export function PaymentDataSection({ payment, onChange }: PaymentDataSectionProp
                 onClick={() => onChange({ showTotalValue: !payment.showTotalValue })}
                 className={cn(
                   'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                  payment.showTotalValue ? 'bg-slate-900' : 'bg-slate-200'
+                  payment.showTotalValue ? 'bg-[#11143F]' : 'bg-slate-200'
                 )}
               >
                 <span

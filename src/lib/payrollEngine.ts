@@ -165,6 +165,10 @@ export function splitEntryIntoSegments(
   nightEnd: string = '06:00'
 ): SplitSegment[] {
   const segments: SplitSegment[] = [];
+
+  if (!/^\d{2}:\d{2}$/.test(entry.startTime) || !/^\d{2}:\d{2}$/.test(entry.endTime)) {
+    return segments;
+  }
   
   const startMinutes = timeToMinutes(entry.startTime);
   let endMinutes = timeToMinutes(entry.endTime);

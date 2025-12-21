@@ -16,7 +16,7 @@ export function TabsNavigation({ activeTab, onTabChange }: TabsNavigationProps) 
             className={cn(
               'flex-1 px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center',
               activeTab === 'entradas'
-                ? 'bg-slate-900 text-white'
+                ? 'bg-[#11143F] text-white'
                 : 'text-slate-600 hover:bg-slate-50'
             )}
           >
@@ -28,7 +28,7 @@ export function TabsNavigation({ activeTab, onTabChange }: TabsNavigationProps) 
             className={cn(
               'flex-1 px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center',
               activeTab === 'resultados'
-                ? 'bg-slate-900 text-white'
+                ? 'bg-[#11143F] text-white'
                 : 'text-slate-600 hover:bg-slate-50'
             )}
           >
@@ -40,7 +40,7 @@ export function TabsNavigation({ activeTab, onTabChange }: TabsNavigationProps) 
             className={cn(
               'flex-1 px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center',
               activeTab === 'notas'
-                ? 'bg-slate-900 text-white'
+                ? 'bg-[#11143F] text-white'
                 : 'text-slate-600 hover:bg-slate-50'
             )}
           >

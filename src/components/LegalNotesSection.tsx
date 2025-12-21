@@ -65,7 +65,7 @@ export function LegalNotesSection() {
 
         <div className="space-y-3">
           <AccordionItem
-            icon={<Moon className="text-indigo-600 w-5 h-5" />}
+            icon={<Moon className="text-[#11143F] w-5 h-5" />}
             title="¿Qué es hora nocturna?"
             isOpen={openItems.has('nocturna')}
             onToggle={() => toggleItem('nocturna')}
@@ -92,7 +92,7 @@ export function LegalNotesSection() {
           </AccordionItem>
 
           <AccordionItem
-            icon={<Clock className="text-orange-600 w-5 h-5" />}
+            icon={<Clock className="text-[#83152E] w-5 h-5" />}
             title="Recargo nocturno vs. Hora extra nocturna"
             isOpen={openItems.has('extra-nocturna')}
             onToggle={() => toggleItem('extra-nocturna')}
@@ -126,7 +126,7 @@ export function LegalNotesSection() {
           </AccordionItem>
 
           <AccordionItem
-            icon={<Calendar className="text-green-600 w-5 h-5" />}
+            icon={<Calendar className="text-[#11143F] w-5 h-5" />}
             title="Dominical y festivo"
             isOpen={openItems.has('dominical')}
             onToggle={() => toggleItem('dominical')}
@@ -163,7 +163,7 @@ export function LegalNotesSection() {
           </AccordionItem>
 
           <AccordionItem
-            icon={<Briefcase className="text-purple-600 w-5 h-5" />}
+            icon={<Briefcase className="text-[#83152E] w-5 h-5" />}
             title="Jornada semanal legal 2025 y reducción gradual"
             isOpen={openItems.has('jornada')}
             onToggle={() => toggleItem('jornada')}
@@ -217,7 +217,7 @@ export function LegalNotesSection() {
           </AccordionItem>
 
           <AccordionItem
-            icon={<Calculator className="text-teal-600 w-5 h-5" />}
+            icon={<Calculator className="text-[#11143F] w-5 h-5" />}
             title="Cálculo del valor de la hora"
             isOpen={openItems.has('calculo')}
             onToggle={() => toggleItem('calculo')}

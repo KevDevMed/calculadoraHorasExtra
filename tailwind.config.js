@@ -15,7 +15,12 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
-      colors: {},
+      colors: {
+        brand: {
+          navy: '#11143F',
+          burgundy: '#83152E',
+        },
+      },
     },
   },
   plugins: [],

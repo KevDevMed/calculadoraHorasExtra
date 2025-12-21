@@ -1,24 +1,30 @@
-import { Clock, Plus, Trash2, Moon } from 'lucide-react';
+import { Clock, Plus, Trash2, Moon, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { WorkEntry } from '../lib/payrollEngine';
 import { cn } from '../lib/utils';
 import { isHoliday, getHolidayName } from '../lib/colombianHolidays';
 
 interface TimeEntrySectionProps {
   entries: WorkEntry[];
+  weekStarts: string[];
+  activeWeekStart: string;
   entryMode: 'simple' | 'detailed';
   onModeChange: (mode: 'simple' | 'detailed') => void;
-  onAddEntry: () => void;
+  onAddWeek: () => void;
   onUpdateEntry: (id: string, updates: Partial<WorkEntry>) => void;
   onRemoveEntry: (id: string) => void;
+  onWeekChange: (weekStart: string) => void;
 }
 
 export function TimeEntrySection({
   entries,
+  weekStarts,
+  activeWeekStart,
   entryMode,
   onModeChange,
-  onAddEntry,
+  onAddWeek,
   onUpdateEntry,
   onRemoveEntry,
+  onWeekChange,
 }: TimeEntrySectionProps) {
   const getWeekday = (dateStr: string) => {
     const weekday = new Date(dateStr + 'T12:00:00').toLocaleDateString('es-CO', { weekday: 'long' });
@@ -54,15 +60,38 @@ export function TimeEntrySection({
     return startHour >= 21 || endHour <= 6 || hasMidnightCrossing(entry);
   };
 
-  const midnightCrossingEntries = entries.filter(hasMidnightCrossing);
+  // Filter entries for active week (Mon-Sun)
+  const getWeekEndDate = (mondayStr: string) => {
+    const monday = new Date(mondayStr + 'T12:00:00');
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    return sunday.toISOString().split('T')[0];
+  };
+
+  const weekEndDate = getWeekEndDate(activeWeekStart);
+  const weekEntries = entries.filter(e => e.date >= activeWeekStart && e.date <= weekEndDate);
+
+  const midnightCrossingEntries = weekEntries.filter(e => e.startTime && e.endTime && hasMidnightCrossing(e));
+
+  const activeWeekIndex = weekStarts.indexOf(activeWeekStart);
+  const canGoPrev = activeWeekIndex > 0;
+  const canGoNext = activeWeekIndex < weekStarts.length - 1;
+
+  const formatWeekLabel = (mondayStr: string) => {
+    const monday = new Date(mondayStr + 'T12:00:00');
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
+    return `${monday.toLocaleDateString('es-CO', opts)} – ${sunday.toLocaleDateString('es-CO', opts)}`;
+  };
 
   return (
     <section className="mb-6">
       <div className="bg-white rounded-xl border border-slate-200 p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center">
-              <Clock className="text-indigo-600 w-5 h-5" />
+            <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+              <Clock className="text-[#11143F] w-5 h-5" />
             </div>
             <div>
               <h3 className="text-lg font-semibold text-slate-900">Registro de Tiempo</h3>
@@ -77,7 +106,7 @@ export function TimeEntrySection({
               onClick={() => onModeChange(entryMode === 'simple' ? 'detailed' : 'simple')}
               className={cn(
                 'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                entryMode === 'detailed' ? 'bg-slate-900' : 'bg-slate-200'
+                entryMode === 'detailed' ? 'bg-[#11143F]' : 'bg-slate-200'
               )}
             >
               <span
@@ -97,13 +126,41 @@ export function TimeEntrySection({
           <div>
             <div className="mb-4">
               <div className="flex items-center justify-between mb-4">
-                <p className="text-sm text-slate-600">Registre cada turno trabajado con sus detalles específicos</p>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => canGoPrev && onWeekChange(weekStarts[activeWeekIndex - 1])}
+                    disabled={!canGoPrev}
+                    className={cn(
+                      'p-2 rounded-lg border transition-colors',
+                      canGoPrev
+                        ? 'border-slate-300 hover:bg-slate-50 text-slate-700'
+                        : 'border-slate-200 text-slate-300 cursor-not-allowed'
+                    )}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <span className="text-sm font-medium text-slate-900 min-w-[140px] text-center">
+                    {formatWeekLabel(activeWeekStart)}
+                  </span>
+                  <button
+                    onClick={() => canGoNext && onWeekChange(weekStarts[activeWeekIndex + 1])}
+                    disabled={!canGoNext}
+                    className={cn(
+                      'p-2 rounded-lg border transition-colors',
+                      canGoNext
+                        ? 'border-slate-300 hover:bg-slate-50 text-slate-700'
+                        : 'border-slate-200 text-slate-300 cursor-not-allowed'
+                    )}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
                 <button
-                  onClick={onAddEntry}
-                  className="px-4 py-2 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors flex items-center"
+                  onClick={onAddWeek}
+                  className="px-4 py-2 bg-gradient-to-r from-[#11143F] to-[#83152E] text-white rounded-lg font-medium hover:opacity-95 transition-colors flex items-center"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Agregar turno
+                  Agregar semana
                 </button>
               </div>
             </div>
@@ -125,8 +182,8 @@ export function TimeEntrySection({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
-                    {entries.map((entry) => {
-                      const isNight = hasNightHours(entry);
+                    {weekEntries.map((entry) => {
+                      const isNight = entry.startTime && entry.endTime ? hasNightHours(entry) : false;
                       const holidayName = getHolidayName(entry.date);
                       const autoHoliday = isHoliday(entry.date);
                       

@@ -7,7 +7,6 @@ import { PaymentDataSection } from './components/PaymentDataSection';
 import { InternalConfigSection } from './components/InternalConfigSection';
 import { LegalConfigSection } from './components/LegalConfigSection';
 import { TimeEntrySection } from './components/TimeEntrySection';
-import { PayrollConfigSection } from './components/PayrollConfigSection';
 import { ResultsDashboard } from './components/ResultsDashboard';
 import { LegalNotesSection } from './components/LegalNotesSection';
 import { Footer } from './components/Footer';
@@ -19,9 +18,10 @@ function App() {
     setInternal,
     setLegal,
     setPayroll,
-    addEntry,
+    addWeek,
     updateEntry,
     removeEntry,
+    setActiveWeekStart,
     setActiveTab,
     setResultsTab,
     setEntryMode,
@@ -31,11 +31,13 @@ function App() {
   } = usePayrollStore();
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-white">
       <Header />
       
       <main className="max-w-7xl mx-auto px-6 py-8">
         <HeroSection />
+
+        <div className="my-8 border-t border-slate-200" />
         
         <TabsNavigation 
           activeTab={state.activeTab} 
@@ -53,6 +55,8 @@ function App() {
               config={state.internal} 
               onChange={setInternal}
               onReset={resetInternal}
+              payroll={state.payroll}
+              onPayrollChange={setPayroll}
             />
             
             <LegalConfigSection 
@@ -63,23 +67,21 @@ function App() {
             
             <TimeEntrySection
               entries={state.entries}
+              weekStarts={state.weekStarts}
+              activeWeekStart={state.activeWeekStart}
               entryMode={state.entryMode}
               onModeChange={setEntryMode}
-              onAddEntry={addEntry}
+              onAddWeek={addWeek}
               onUpdateEntry={updateEntry}
               onRemoveEntry={removeEntry}
-            />
-            
-            <PayrollConfigSection 
-              config={state.payroll} 
-              onChange={setPayroll} 
+              onWeekChange={setActiveWeekStart}
             />
 
             <section className="mb-8">
               <div className="flex justify-center">
                 <button
                   onClick={calculate}
-                  className="px-8 py-4 bg-slate-900 text-white rounded-xl font-semibold text-lg hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center"
+                  className="px-8 py-4 bg-gradient-to-r from-[#11143F] to-[#83152E] text-white rounded-xl font-semibold text-lg hover:opacity-95 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center"
                 >
                   <Calculator className="w-5 h-5 mr-3" />
                   Calcular Comparativa
@@ -91,6 +93,7 @@ function App() {
 
         {state.activeTab === 'resultados' && (
           <ResultsDashboard
+            payment={state.payment}
             internalResult={state.internalResult}
             legalResult={state.legalResult}
             comparison={state.comparison}

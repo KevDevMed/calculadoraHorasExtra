@@ -1,20 +1,22 @@
-import { Building2, RotateCcw, AlertTriangle } from 'lucide-react';
-import type { InternalConfig } from '../lib/payrollEngine';
+import { Building2, RotateCcw, AlertTriangle, CalendarCheck } from 'lucide-react';
+import type { InternalConfig, PayrollConfig } from '../lib/payrollEngine';
 
 interface InternalConfigSectionProps {
   config: InternalConfig;
   onChange: (updates: Partial<InternalConfig>) => void;
   onReset: () => void;
+  payroll: PayrollConfig;
+  onPayrollChange: (updates: Partial<PayrollConfig>) => void;
 }
 
-export function InternalConfigSection({ config, onChange, onReset }: InternalConfigSectionProps) {
+export function InternalConfigSection({ config, onChange, onReset, payroll, onPayrollChange }: InternalConfigSectionProps) {
   return (
     <section className="mb-6">
       <div className="bg-white rounded-xl border border-slate-200 p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
-              <Building2 className="text-purple-600 w-5 h-5" />
+            <div className="w-10 h-10 bg-[#11143F]/10 rounded-lg flex items-center justify-center">
+              <Building2 className="text-[#11143F] w-5 h-5" />
             </div>
             <div>
               <h3 className="text-lg font-semibold text-slate-900">Configuración Interna</h3>
@@ -101,6 +103,35 @@ export function InternalConfigSection({ config, onChange, onReset }: InternalCon
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm">x</span>
             </div>
             <p className="text-xs text-slate-500 mt-1.5">Trabajo en días festivos</p>
+          </div>
+        </div>
+
+        <div className="mt-6 border-t border-slate-200 pt-6">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-10 h-10 bg-[#83152E]/10 rounded-lg flex items-center justify-center">
+              <CalendarCheck className="text-[#83152E] w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-base font-semibold text-slate-900">Pago atrasado de horas extra</h4>
+              <p className="text-sm text-slate-500">Normativa interna: las horas extra se pagan con desfase (el salario base se paga normal)</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Desfase de pago (días)</label>
+              <div className="relative">
+                <input
+                  type="number"
+                  value={payroll.paymentDelay}
+                  onChange={(e) => onPayrollChange({ paymentDelay: parseInt(e.target.value) || 0 })}
+                  step="1"
+                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm">días</span>
+              </div>
+              <p className="text-xs text-slate-500 mt-1.5">Usado para etiquetar cuándo se pagan las extras (para cálculos y visualización)</p>
+            </div>
           </div>
         </div>
       </div>

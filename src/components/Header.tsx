@@ -6,11 +6,11 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 bg-slate-900 rounded-lg flex items-center justify-center">
+            <div className="w-9 h-9 bg-[#11143F] rounded-lg flex items-center justify-center">
               <Calculator className="text-white w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-slate-900">Calculadora de Nómina</h1>
+              <h1 className="text-lg font-semibold text-slate-900">Calculadora de Nómina | Harp Audit</h1>
               <p className="text-xs text-slate-500">Comparativa por ley</p>
             </div>
           </div>

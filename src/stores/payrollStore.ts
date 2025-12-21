@@ -15,6 +15,38 @@ import {
   generateId,
 } from '../lib/payrollEngine';
 
+function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function addDays(date: Date, days: number): Date {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+function getMondayOfCurrentWeek(baseDate: Date = new Date()): Date {
+  const d = new Date(baseDate);
+  d.setHours(12, 0, 0, 0);
+  const day = d.getDay();
+  const daysSinceMonday = (day + 6) % 7;
+  d.setDate(d.getDate() - daysSinceMonday);
+  return d;
+}
+
+function getCurrentWeekWorkDates(workDays: 5 | 6): string[] {
+  const monday = getMondayOfCurrentWeek();
+  const count = workDays === 6 ? 6 : 5;
+  return Array.from({ length: count }, (_, idx) => formatLocalDate(addDays(monday, idx)));
+}
+
+function getWeekDatesFromMonday(monday: Date): string[] {
+  return Array.from({ length: 7 }, (_, idx) => formatLocalDate(addDays(monday, idx)));
+}
+
 export interface SimpleData {
   totalHours: number;
   holidayHours: number;
@@ -33,6 +65,9 @@ export interface PayrollState {
   payroll: PayrollConfig;
   // Work entries (detailed mode)
   entries: WorkEntry[];
+  // Week navigation
+  weekStarts: string[];
+  activeWeekStart: string;
   // Simple mode data
   simpleData: SimpleData;
   // Calculation results
@@ -46,7 +81,7 @@ export interface PayrollState {
 }
 
 const defaultSimpleData: SimpleData = {
-  totalHours: 48,
+  totalHours: 37.5,
   holidayHours: 0,
   sundayHours: 0,
   nightHours: 0,
@@ -83,43 +118,53 @@ const defaultPayroll: PayrollConfig = {
   paymentDelay: 15,
 };
 
-const defaultEntries: WorkEntry[] = [
-  {
-    id: generateId(),
-    date: '2025-01-20',
-    startTime: '08:00',
-    endTime: '17:00',
-    breakMinutes: 60,
-    isHoliday: false,
-    notes: '',
-  },
-  {
-    id: generateId(),
-    date: '2025-01-21',
-    startTime: '08:00',
-    endTime: '18:30',
-    breakMinutes: 60,
-    isHoliday: false,
-    notes: '',
-  },
-  {
-    id: generateId(),
-    date: '2025-01-22',
-    startTime: '22:00',
-    endTime: '06:00',
-    breakMinutes: 30,
-    isHoliday: false,
-    notes: 'Turno nocturno',
-  },
-];
+function createDefaultEntries(workDaysPerWeek: 5 | 6): WorkEntry[] {
+  const monday = getMondayOfCurrentWeek();
+  const dates = getWeekDatesFromMonday(monday);
+  return dates.map((date, idx) => {
+    const dayIndex = idx + 1;
+    const isWorkDay = workDaysPerWeek === 6 ? dayIndex <= 6 : dayIndex <= 5;
+    return {
+      id: generateId(),
+      date,
+      startTime: isWorkDay ? '08:30' : '',
+      endTime: isWorkDay ? '17:00' : '',
+      breakMinutes: isWorkDay ? 60 : 0,
+      isHoliday: false,
+      notes: '',
+    };
+  });
+}
+
+function createWeekEntries(weekStart: string, workDaysPerWeek: 5 | 6): WorkEntry[] {
+  const monday = new Date(weekStart + 'T12:00:00');
+  const dates = getWeekDatesFromMonday(monday);
+  return dates.map((date, idx) => {
+    const dayIndex = idx + 1;
+    const isWorkDay = workDaysPerWeek === 6 ? dayIndex <= 6 : dayIndex <= 5;
+    return {
+      id: generateId(),
+      date,
+      startTime: isWorkDay ? '08:30' : '',
+      endTime: isWorkDay ? '17:00' : '',
+      breakMinutes: isWorkDay ? 60 : 0,
+      isHoliday: false,
+      notes: '',
+    };
+  });
+}
 
 export function usePayrollStore() {
+  const initialWeekStart = formatLocalDate(getMondayOfCurrentWeek());
+
   const [state, setState] = useState<PayrollState>({
     payment: defaultPayment,
     internal: defaultInternal,
     legal: defaultLegal,
     payroll: defaultPayroll,
-    entries: defaultEntries,
+    entries: createDefaultEntries(defaultPayment.workDaysPerWeek),
+    weekStarts: [initialWeekStart],
+    activeWeekStart: initialWeekStart,
     simpleData: defaultSimpleData,
     internalResult: null,
     legalResult: null,
@@ -128,6 +173,28 @@ export function usePayrollStore() {
     resultsTab: 'internal',
     entryMode: 'detailed',
   });
+
+  const setActiveWeekStart = useCallback((weekStart: string) => {
+    setState(prev => ({ ...prev, activeWeekStart: weekStart }));
+  }, []);
+
+  const addWeek = useCallback(() => {
+    const lastWeekStart = state.weekStarts[state.weekStarts.length - 1] || initialWeekStart;
+    const nextWeekStart = formatLocalDate(addDays(new Date(lastWeekStart + 'T12:00:00'), 7));
+
+    if (state.weekStarts.includes(nextWeekStart)) {
+      setState(prev => ({ ...prev, activeWeekStart: nextWeekStart }));
+      return;
+    }
+
+    const newEntries = createWeekEntries(nextWeekStart, state.payment.workDaysPerWeek);
+    setState(prev => ({
+      ...prev,
+      weekStarts: [...prev.weekStarts, nextWeekStart],
+      activeWeekStart: nextWeekStart,
+      entries: [...prev.entries, ...newEntries],
+    }));
+  }, [initialWeekStart, state.payment.workDaysPerWeek, state.weekStarts]);
 
   const setSimpleData = useCallback((data: Partial<SimpleData>) => {
     setState(prev => ({ ...prev, simpleData: { ...prev.simpleData, ...data } }));
@@ -151,21 +218,31 @@ export function usePayrollStore() {
 
   const addEntry = useCallback(() => {
     const lastEntry = state.entries[state.entries.length - 1];
-    const nextDate = lastEntry 
-      ? new Date(new Date(lastEntry.date).getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      : new Date().toISOString().split('T')[0];
+    let nextDate = lastEntry
+      ? formatLocalDate(addDays(new Date(lastEntry.date + 'T12:00:00'), 1))
+      : formatLocalDate(new Date());
+
+    while (true) {
+      const dow = new Date(nextDate + 'T12:00:00').getDay();
+      if (state.payment.workDaysPerWeek === 6) {
+        if (dow !== 0) break;
+      } else {
+        if (dow !== 0 && dow !== 6) break;
+      }
+      nextDate = formatLocalDate(addDays(new Date(nextDate + 'T12:00:00'), 1));
+    }
     
     const newEntry: WorkEntry = {
       id: generateId(),
       date: nextDate,
-      startTime: '08:00',
+      startTime: '08:30',
       endTime: '17:00',
       breakMinutes: 60,
       isHoliday: false,
       notes: '',
     };
     setState(prev => ({ ...prev, entries: [...prev.entries, newEntry] }));
-  }, [state.entries]);
+  }, [state.entries, state.payment.workDaysPerWeek]);
 
   const updateEntry = useCallback((id: string, updates: Partial<WorkEntry>) => {
     setState(prev => ({
@@ -221,15 +298,17 @@ export function usePayrollStore() {
       
       // Strategy: Create specific entries for special types first, then fill rest with normal.
       
-      // We'll just generate entries on specific dummy dates
+      const monday = getMondayOfCurrentWeek();
+      const currentWeekWorkDays = getCurrentWeekWorkDates(state.payment.workDaysPerWeek);
+      const sundayDate = formatLocalDate(addDays(monday, 6));
       
       // 1. Holidays (Use a known holiday date if possible, or just mark isHoliday=true)
       if (holidayHours > 0) {
         entriesToCalc.push({
           id: generateId(),
-          date: '2025-01-01', // Holiday
-          startTime: '08:00',
-          endTime: timeFromDuration('08:00', holidayHours),
+          date: currentWeekWorkDays[0] || formatLocalDate(monday),
+          startTime: '08:30',
+          endTime: timeFromDuration('08:30', holidayHours),
           breakMinutes: 0,
           isHoliday: true,
           notes: 'Generado: Festivo',
@@ -241,9 +320,9 @@ export function usePayrollStore() {
       if (sundayHours > 0) {
         entriesToCalc.push({
           id: generateId(),
-          date: '2025-01-26', // Sunday
-          startTime: '08:00',
-          endTime: timeFromDuration('08:00', sundayHours),
+          date: sundayDate,
+          startTime: '08:30',
+          endTime: timeFromDuration('08:30', sundayHours),
           breakMinutes: 0,
           isHoliday: false,
           notes: 'Generado: Domingo',
@@ -256,7 +335,7 @@ export function usePayrollStore() {
         // Start at 22:00
         entriesToCalc.push({
           id: generateId(),
-          date: '2025-01-20', // Monday
+          date: currentWeekWorkDays[0] || formatLocalDate(monday),
           startTime: '22:00',
           endTime: timeFromDuration('22:00', remainingNight),
           breakMinutes: 0,
@@ -269,7 +348,7 @@ export function usePayrollStore() {
       // 4. Remaining as Normal Day hours (Weekday)
       if (remainingTotal > 0) {
         // Distribute 8h per day for remaining
-        const workDays = ['2025-01-21', '2025-01-22', '2025-01-23', '2025-01-24', '2025-01-25'];
+        const workDays = currentWeekWorkDays.length > 0 ? currentWeekWorkDays : [formatLocalDate(monday)];
         let dayIdx = 0;
         
         while (remainingTotal > 0) {
@@ -277,8 +356,8 @@ export function usePayrollStore() {
           entriesToCalc.push({
             id: generateId(),
             date: workDays[dayIdx % workDays.length],
-            startTime: '08:00',
-            endTime: timeFromDuration('08:00', hoursToday),
+            startTime: '08:30',
+            endTime: timeFromDuration('08:30', hoursToday),
             breakMinutes: 0,
             isHoliday: false,
             notes: 'Generado: Normal',
@@ -310,8 +389,10 @@ export function usePayrollStore() {
     setPayroll,
     setSimpleData,
     addEntry,
+    addWeek,
     updateEntry,
     removeEntry,
+    setActiveWeekStart,
     setActiveTab,
     setResultsTab,
     setEntryMode,
