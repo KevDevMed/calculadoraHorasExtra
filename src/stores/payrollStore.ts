@@ -98,7 +98,7 @@ const defaultInternal: InternalConfig = {
   baseWeeklyHours: 37.5,
   bufferLimit: 40,
   extraMultiplier: 1.5,
-  holidayMultiplier: 2.0,
+  holidayMultiplier: 2.0, // Festivos se pagan al doble
 };
 
 const defaultLegal: LegalConfig = {
@@ -178,21 +178,30 @@ export function usePayrollStore() {
     setState(prev => ({ ...prev, activeWeekStart: weekStart }));
   }, []);
 
-  const addWeek = useCallback(() => {
-    const lastWeekStart = state.weekStarts[state.weekStarts.length - 1] || initialWeekStart;
-    const nextWeekStart = formatLocalDate(addDays(new Date(lastWeekStart + 'T12:00:00'), 7));
+  const addWeek = useCallback((direction: 'next' | 'previous' = 'next') => {
+    let targetWeekStart: string;
+    
+    if (direction === 'next') {
+      const lastWeekStart = state.weekStarts[state.weekStarts.length - 1] || initialWeekStart;
+      targetWeekStart = formatLocalDate(addDays(new Date(lastWeekStart + 'T12:00:00'), 7));
+    } else {
+      const firstWeekStart = state.weekStarts[0] || initialWeekStart;
+      targetWeekStart = formatLocalDate(addDays(new Date(firstWeekStart + 'T12:00:00'), -7));
+    }
 
-    if (state.weekStarts.includes(nextWeekStart)) {
-      setState(prev => ({ ...prev, activeWeekStart: nextWeekStart }));
+    if (state.weekStarts.includes(targetWeekStart)) {
+      setState(prev => ({ ...prev, activeWeekStart: targetWeekStart }));
       return;
     }
 
-    const newEntries = createWeekEntries(nextWeekStart, state.payment.workDaysPerWeek);
+    const newEntries = createWeekEntries(targetWeekStart, state.payment.workDaysPerWeek);
     setState(prev => ({
       ...prev,
-      weekStarts: [...prev.weekStarts, nextWeekStart],
-      activeWeekStart: nextWeekStart,
-      entries: [...prev.entries, ...newEntries],
+      weekStarts: direction === 'next' 
+        ? [...prev.weekStarts, targetWeekStart].sort()
+        : [targetWeekStart, ...prev.weekStarts].sort(),
+      activeWeekStart: targetWeekStart,
+      entries: [...prev.entries, ...newEntries].sort((a, b) => a.date.localeCompare(b.date)),
     }));
   }, [initialWeekStart, state.payment.workDaysPerWeek, state.weekStarts]);
 
@@ -257,6 +266,27 @@ export function usePayrollStore() {
       entries: prev.entries.filter(e => e.id !== id),
     }));
   }, []);
+
+  const importEntries = useCallback((newEntries: WorkEntry[]) => {
+    // Get all unique week starts from new entries
+    const getWeekStart = (dateStr: string): string => {
+      const date = new Date(dateStr + 'T12:00:00');
+      const day = date.getDay();
+      const daysSinceMonday = (day + 6) % 7;
+      date.setDate(date.getDate() - daysSinceMonday);
+      return formatLocalDate(date);
+    };
+
+    const newWeekStarts = [...new Set(newEntries.map(e => getWeekStart(e.date)))];
+    const allWeekStarts = [...new Set([...state.weekStarts, ...newWeekStarts])].sort();
+    
+    setState(prev => ({
+      ...prev,
+      entries: newEntries,
+      weekStarts: allWeekStarts,
+      activeWeekStart: allWeekStarts[0] || prev.activeWeekStart,
+    }));
+  }, [state.weekStarts]);
 
   const setActiveTab = useCallback((tab: 'entradas' | 'resultados' | 'notas') => {
     setState(prev => ({ ...prev, activeTab: tab }));
@@ -392,6 +422,7 @@ export function usePayrollStore() {
     addWeek,
     updateEntry,
     removeEntry,
+    importEntries,
     setActiveWeekStart,
     setActiveTab,
     setResultsTab,

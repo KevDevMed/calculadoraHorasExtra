@@ -1,4 +1,5 @@
-import { Calculator } from 'lucide-react';
+import { useState } from 'react';
+import { Calculator, Loader2 } from 'lucide-react';
 import { usePayrollStore } from './stores/payrollStore';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
@@ -12,6 +13,8 @@ import { LegalNotesSection } from './components/LegalNotesSection';
 import { Footer } from './components/Footer';
 
 function App() {
+  const [isCalculating, setIsCalculating] = useState(false);
+  
   const {
     state,
     setPayment,
@@ -80,8 +83,17 @@ function App() {
             <section className="mb-8">
               <div className="flex justify-center">
                 <button
-                  onClick={calculate}
-                  className="px-8 py-4 bg-gradient-to-r from-[#11143F] to-[#83152E] text-white rounded-xl font-semibold text-lg hover:opacity-95 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center"
+                  onClick={() => {
+                    setIsCalculating(true);
+                    // Simulate processing time for UX feedback
+                    setTimeout(() => {
+                      calculate();
+                      setIsCalculating(false);
+                      setActiveTab('resultados');
+                    }, 1500);
+                  }}
+                  disabled={isCalculating}
+                  className="px-8 py-4 bg-gradient-to-r from-[#11143F] to-[#83152E] text-white rounded-xl font-semibold text-lg hover:opacity-95 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   <Calculator className="w-5 h-5 mr-3" />
                   Calcular Comparativa
@@ -108,6 +120,19 @@ function App() {
       </main>
 
       <Footer />
+
+      {/* Loading Modal */}
+      {isCalculating && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 shadow-2xl flex flex-col items-center max-w-sm mx-4">
+            <Loader2 className="w-12 h-12 text-[#11143F] animate-spin mb-4" />
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">Calculando...</h3>
+            <p className="text-sm text-slate-500 text-center">
+              Analizando horas trabajadas, recargos y comparando políticas internas con la ley colombiana.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

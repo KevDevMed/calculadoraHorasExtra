@@ -1,4 +1,5 @@
-import { Clock, Plus, Trash2, Moon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { Clock, Plus, Trash2, Moon, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import type { WorkEntry } from '../lib/payrollEngine';
 import { cn } from '../lib/utils';
 import { isHoliday, getHolidayName } from '../lib/colombianHolidays';
@@ -9,7 +10,7 @@ interface TimeEntrySectionProps {
   activeWeekStart: string;
   entryMode: 'simple' | 'detailed';
   onModeChange: (mode: 'simple' | 'detailed') => void;
-  onAddWeek: () => void;
+  onAddWeek: (direction: 'next' | 'previous') => void;
   onUpdateEntry: (id: string, updates: Partial<WorkEntry>) => void;
   onRemoveEntry: (id: string) => void;
   onWeekChange: (weekStart: string) => void;
@@ -26,6 +27,7 @@ export function TimeEntrySection({
   onRemoveEntry,
   onWeekChange,
 }: TimeEntrySectionProps) {
+  const [showWeekMenu, setShowWeekMenu] = useState(false);
   const getWeekday = (dateStr: string) => {
     const weekday = new Date(dateStr + 'T12:00:00').toLocaleDateString('es-CO', { weekday: 'long' });
     return weekday.charAt(0).toUpperCase() + weekday.slice(1);
@@ -37,8 +39,15 @@ export function TimeEntrySection({
   };
 
   const getEntryTotalHours = (entry: WorkEntry) => {
+    // Return 0 if times are missing or invalid
+    if (!entry.startTime || !entry.endTime) return 0;
+    
     const startMinutes = timeToMinutes(entry.startTime);
     let endMinutes = timeToMinutes(entry.endTime);
+    
+    // Check for NaN values
+    if (isNaN(startMinutes) || isNaN(endMinutes)) return 0;
+    
     if (endMinutes <= startMinutes) {
       endMinutes += 24 * 60;
     }
@@ -83,6 +92,11 @@ export function TimeEntrySection({
     sunday.setDate(monday.getDate() + 6);
     const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
     return `${monday.toLocaleDateString('es-CO', opts)} – ${sunday.toLocaleDateString('es-CO', opts)}`;
+  };
+
+  const handleAddWeek = (direction: 'next' | 'previous') => {
+    onAddWeek(direction);
+    setShowWeekMenu(false);
   };
 
   return (
@@ -155,13 +169,36 @@ export function TimeEntrySection({
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
-                <button
-                  onClick={onAddWeek}
-                  className="px-4 py-2 bg-gradient-to-r from-[#11143F] to-[#83152E] text-white rounded-lg font-medium hover:opacity-95 transition-colors flex items-center"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Agregar semana
-                </button>
+                <div className="flex items-center space-x-2">
+                  <div className="relative">
+                  <button
+                    onClick={() => setShowWeekMenu(!showWeekMenu)}
+                    className="px-4 py-2 bg-gradient-to-r from-[#11143F] to-[#83152E] text-white rounded-lg font-medium hover:opacity-95 transition-colors flex items-center"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Agregar semana
+                    <ChevronDown className="w-4 h-4 ml-2" />
+                  </button>
+                  {showWeekMenu && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-10">
+                      <button
+                        onClick={() => handleAddWeek('previous')}
+                        className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center"
+                      >
+                        <ChevronLeft className="w-4 h-4 mr-2" />
+                        Semana anterior
+                      </button>
+                      <button
+                        onClick={() => handleAddWeek('next')}
+                        className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center"
+                      >
+                        <ChevronRight className="w-4 h-4 mr-2" />
+                        Semana siguiente
+                      </button>
+                    </div>
+                  )}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -174,10 +211,8 @@ export function TimeEntrySection({
                       <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Día</th>
                       <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Inicio</th>
                       <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Fin</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Break (min)</th>
                       <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase tracking-wider">Horas</th>
                       <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Festivo</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Notas</th>
                       <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">Acciones</th>
                     </tr>
                   </thead>
@@ -247,19 +282,6 @@ export function TimeEntrySection({
                               )}
                             />
                           </td>
-                          <td className="px-4 py-3">
-                            <input
-                              type="number"
-                              value={entry.breakMinutes}
-                              onChange={(e) => onUpdateEntry(entry.id, { breakMinutes: parseInt(e.target.value) || 0 })}
-                              className={cn(
-                                'w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:border-transparent',
-                                isNight
-                                  ? 'border-amber-300 focus:ring-amber-500'
-                                  : 'border-slate-300 focus:ring-slate-900'
-                              )}
-                            />
-                          </td>
                           <td className="px-4 py-3 text-right text-sm text-slate-700 tabular-nums">
                             {getEntryTotalHours(entry).toFixed(2)}
                           </td>
@@ -269,20 +291,6 @@ export function TimeEntrySection({
                               checked={entry.isHoliday || autoHoliday}
                               onChange={(e) => onUpdateEntry(entry.id, { isHoliday: e.target.checked })}
                               className="w-4 h-4 text-slate-900 border-slate-300 rounded focus:ring-slate-900"
-                            />
-                          </td>
-                          <td className="px-4 py-3">
-                            <input
-                              type="text"
-                              value={entry.notes}
-                              onChange={(e) => onUpdateEntry(entry.id, { notes: e.target.value })}
-                              placeholder="Opcional"
-                              className={cn(
-                                'w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:border-transparent',
-                                isNight
-                                  ? 'border-amber-300 focus:ring-amber-500'
-                                  : 'border-slate-300 focus:ring-slate-900'
-                              )}
                             />
                           </td>
                           <td className="px-4 py-3">
@@ -297,6 +305,17 @@ export function TimeEntrySection({
                       );
                     })}
                   </tbody>
+                  <tfoot className="bg-slate-100 border-t border-slate-300">
+                    <tr>
+                      <td colSpan={4} className="px-4 py-3 text-sm font-semibold text-slate-900">
+                        Total: {weekEntries.filter(e => e.startTime && e.endTime).length} días trabajados
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-bold text-slate-900 tabular-nums">
+                        {weekEntries.reduce((sum, entry) => sum + (entry.startTime && entry.endTime ? getEntryTotalHours(entry) : 0), 0).toFixed(2)} h
+                      </td>
+                      <td colSpan={2}></td>
+                    </tr>
+                  </tfoot>
                 </table>
               </div>
             </div>
