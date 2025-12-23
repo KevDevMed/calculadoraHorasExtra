@@ -14,38 +14,38 @@ export function TabsNavigation({ activeTab, onTabChange }: TabsNavigationProps) 
           <button
             onClick={() => onTabChange('entradas')}
             className={cn(
-              'flex-1 px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center',
+              'flex-1 px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all flex items-center justify-center text-sm sm:text-base',
               activeTab === 'entradas'
                 ? 'bg-[#11143F] text-white'
                 : 'text-slate-600 hover:bg-slate-50'
             )}
           >
-            <Keyboard className="w-4 h-4 mr-2" />
-            Entradas
+            <Keyboard className="w-4 h-4 sm:mr-2" />
+            <span className="hidden sm:inline">Entradas</span>
           </button>
           <button
             onClick={() => onTabChange('resultados')}
             className={cn(
-              'flex-1 px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center',
+              'flex-1 px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all flex items-center justify-center text-sm sm:text-base',
               activeTab === 'resultados'
                 ? 'bg-[#11143F] text-white'
                 : 'text-slate-600 hover:bg-slate-50'
             )}
           >
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Resultados
+            <BarChart3 className="w-4 h-4 sm:mr-2" />
+            <span className="hidden sm:inline">Resultados</span>
           </button>
           <button
             onClick={() => onTabChange('notas')}
             className={cn(
-              'flex-1 px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center',
+              'flex-1 px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all flex items-center justify-center text-sm sm:text-base',
               activeTab === 'notas'
                 ? 'bg-[#11143F] text-white'
                 : 'text-slate-600 hover:bg-slate-50'
             )}
           >
-            <Scale className="w-4 h-4 mr-2" />
-            Notas Legales
+            <Scale className="w-4 h-4 sm:mr-2" />
+            <span className="hidden sm:inline">Notas Legales</span>
           </button>
         </div>
       </div>

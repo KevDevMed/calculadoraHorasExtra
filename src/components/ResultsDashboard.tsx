@@ -538,48 +538,48 @@ Horas:
   return (
     <div>
       {/* KPI Cards */}
-      <section className="mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-gradient-to-br from-[#11143F] to-[#83152E] rounded-xl p-6 text-white">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                <Building2 className="w-6 h-6" />
+      <section className="mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+          <div className="bg-gradient-to-br from-[#11143F] to-[#83152E] rounded-xl p-4 sm:p-6 text-white">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-lg flex items-center justify-center">
+                <Building2 className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">Interno</span>
+              <span className="text-xs sm:text-sm font-medium bg-white/20 px-2 sm:px-3 py-1 rounded-full">Interno</span>
             </div>
-            <h4 className="text-sm font-medium mb-2 opacity-90">Neto Política Interna - {selectedPeriod.periodLabel}</h4>
-            <p className="text-3xl font-bold mb-1">{formatCurrency(intNet)}</p>
-            <p className="text-sm opacity-80">Después de deducciones</p>
+            <h4 className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 opacity-90">Neto Política Interna</h4>
+            <p className="text-2xl sm:text-3xl font-bold mb-1">{formatCurrency(intNet)}</p>
+            <p className="text-xs sm:text-sm opacity-80">Después de deducciones</p>
           </div>
 
-          <div className="bg-gradient-to-br from-[#83152E] to-[#11143F] rounded-xl p-6 text-white">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                <Scale className="w-6 h-6" />
+          <div className="bg-gradient-to-br from-[#83152E] to-[#11143F] rounded-xl p-4 sm:p-6 text-white">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-lg flex items-center justify-center">
+                <Scale className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">Legal</span>
+              <span className="text-xs sm:text-sm font-medium bg-white/20 px-2 sm:px-3 py-1 rounded-full">Legal</span>
             </div>
-            <h4 className="text-sm font-medium mb-2 opacity-90">Neto Ley Colombiana - {selectedPeriod.periodLabel}</h4>
-            <p className="text-3xl font-bold mb-1">{formatCurrency(legalNet)}</p>
-            <p className="text-sm opacity-80">Después de deducciones</p>
+            <h4 className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 opacity-90">Neto Ley Colombiana</h4>
+            <p className="text-2xl sm:text-3xl font-bold mb-1">{formatCurrency(legalNet)}</p>
+            <p className="text-xs sm:text-sm opacity-80">Después de deducciones</p>
           </div>
 
-          <div className={cn(differenceGradientClass, 'rounded-xl p-6 text-white')}>
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                <GitCompare className="w-6 h-6" />
+          <div className={cn(differenceGradientClass, 'rounded-xl p-4 sm:p-6 text-white sm:col-span-2 lg:col-span-1')}>
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-lg flex items-center justify-center">
+                <GitCompare className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <span className={cn(
-                "text-sm font-medium px-3 py-1 rounded-full",
+                "text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full",
                 isOverpaid ? 'bg-white/15' : 'bg-white/15'
               )}>
                 {differenceBadgeLabel}
               </span>
             </div>
-            <h4 className="text-sm font-medium mb-2 opacity-90">Diferencia Neto - {selectedPeriod.periodLabel}</h4>
-            <p className="text-3xl font-bold mb-1">{formatCurrency(Math.abs(intNet - legalNet))}</p>
-            <p className="text-sm opacity-80">
-              {intNet > legalNet ? '+' : ''}{legalNet !== 0 ? (((intNet - legalNet) / legalNet) * 100).toFixed(1) : '0'}% comparado con lo mínimo de ley
+            <h4 className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 opacity-90">Diferencia Neto</h4>
+            <p className="text-2xl sm:text-3xl font-bold mb-1">{formatCurrency(Math.abs(intNet - legalNet))}</p>
+            <p className="text-xs sm:text-sm opacity-80">
+              {intNet > legalNet ? '+' : ''}{legalNet !== 0 ? (((intNet - legalNet) / legalNet) * 100).toFixed(1) : '0'}% vs ley
             </p>
           </div>
         </div>
@@ -587,15 +587,15 @@ Horas:
 
       {/* Two Payslips: Internal and Legal */}
       <section className="mb-6">
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-slate-900">Desprendibles de nómina (prototipos)</h3>
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-900">Desprendibles de nómina</h3>
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-slate-600">Período:</span>
+              <span className="text-xs sm:text-sm text-slate-600">Período:</span>
               <select
                 value={payslipView}
                 onChange={(e) => setPayslipView(e.target.value)}
-                className="px-3 py-1.5 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900"
+                className="flex-1 sm:flex-none px-2 sm:px-3 py-1.5 border border-slate-300 rounded-lg text-xs sm:text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900"
               >
                 <option value="total">Consolidado</option>
                 {internalQuincenaGroups.map(([key, group]) => (
@@ -604,7 +604,7 @@ Horas:
               </select>
             </div>
           </div>
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
           {/* Internal Payslip */}
           <div>
             <div className="flex justify-between items-center mb-3">
@@ -963,38 +963,38 @@ Horas:
             <button
               onClick={() => onTabChange('internal')}
               className={cn(
-                'flex-1 px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center',
+                'flex-1 px-2 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all flex items-center justify-center text-xs sm:text-sm',
                 resultsTab === 'internal'
                   ? 'bg-[#11143F] text-white'
                   : 'text-slate-600 hover:bg-slate-50'
               )}
             >
-              <Building2 className="w-4 h-4 mr-2" />
-              Política Interna
+              <Building2 className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Interno</span>
             </button>
             <button
               onClick={() => onTabChange('legal')}
               className={cn(
-                'flex-1 px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center',
+                'flex-1 px-2 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all flex items-center justify-center text-xs sm:text-sm',
                 resultsTab === 'legal'
                   ? 'bg-[#11143F] text-white'
                   : 'text-slate-600 hover:bg-slate-50'
               )}
             >
-              <Scale className="w-4 h-4 mr-2" />
-              Ley Colombiana
+              <Scale className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Legal</span>
             </button>
             <button
               onClick={() => onTabChange('comparison')}
               className={cn(
-                'flex-1 px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center',
+                'flex-1 px-2 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all flex items-center justify-center text-xs sm:text-sm',
                 resultsTab === 'comparison'
                   ? 'bg-[#11143F] text-white'
                   : 'text-slate-600 hover:bg-slate-50'
               )}
             >
-              <GitCompare className="w-4 h-4 mr-2" />
-              Comparación
+              <GitCompare className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Comparación</span>
             </button>
           </div>
         </div>
@@ -1003,29 +1003,29 @@ Horas:
       {/* Breakdown Section */}
       {resultsTab !== 'comparison' ? (
         <section className="mb-6">
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-slate-900">Desglose por Categoría - {resultLabel}</h3>
-              <div className="flex space-x-3">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-slate-900">Desglose - {resultLabel}</h3>
+              <div className="flex space-x-2 sm:space-x-3">
                 <button
                   onClick={exportToCSV}
-                  className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center"
+                  className="px-2 sm:px-4 py-1.5 sm:py-2 border border-slate-300 rounded-lg text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center"
                 >
-                  <FileSpreadsheet className="w-4 h-4 mr-2" />
-                  Exportar CSV
+                  <FileSpreadsheet className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline">Exportar</span> CSV
                 </button>
                 <button
                   onClick={copyToClipboard}
-                  className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center"
+                  className="px-2 sm:px-4 py-1.5 sm:py-2 border border-slate-300 rounded-lg text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center"
                 >
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copiar resumen
+                  <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  Copiar
                 </button>
               </div>
             </div>
 
-            <div className="border border-slate-200 rounded-lg overflow-hidden mb-6">
-              <div className="h-[300px] w-full p-4">
+            <div className="border border-slate-200 rounded-lg overflow-hidden mb-4 sm:mb-6">
+              <div className="h-[200px] sm:h-[300px] w-full p-2 sm:p-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -1052,48 +1052,50 @@ Horas:
                 </ResponsiveContainer>
               </div>
 
-              <table className="w-full">
-                <thead className="bg-slate-50 border-b border-slate-200">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Categoría</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">Horas</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">Tarifa/Hora</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">Subtotal</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">% Total</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200">
-                  {activeResult.categories.map((cat, idx) => {
-                    const colors = ['bg-slate-400', 'bg-blue-400', 'bg-orange-400', 'bg-purple-400', 'bg-green-400', 'bg-indigo-400'];
-                    return (
-                      <tr key={cat.category} className="hover:bg-slate-50">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center">
-                            <span className={`w-3 h-3 ${colors[idx % colors.length]} rounded-full mr-3`}></span>
-                            <span className="font-medium text-slate-900">{cat.category}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-right text-slate-700">{cat.hours.toFixed(1)}</td>
-                        <td className="px-6 py-4 text-right text-slate-700">{formatCurrency(cat.rate)}</td>
-                        <td className="px-6 py-4 text-right font-semibold text-slate-900">{formatCurrency(cat.subtotal)}</td>
-                        <td className="px-6 py-4 text-right text-slate-700">{cat.percentage}%</td>
-                      </tr>
-                    );
-                  })}
-                  <tr className="bg-slate-50 font-semibold">
-                    <td className="px-6 py-4 text-slate-900">Total</td>
-                    <td className="px-6 py-4 text-right text-slate-900">{activeResult.totalHours.toFixed(1)}</td>
-                    <td className="px-6 py-4 text-right text-slate-900">-</td>
-                    <td className="px-6 py-4 text-right text-slate-900">{formatCurrency(activeResult.totalAmount)}</td>
-                    <td className="px-6 py-4 text-right text-slate-900">100%</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[500px]">
+                  <thead className="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                      <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-700">Categoría</th>
+                      <th className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm font-semibold text-slate-700">Horas</th>
+                      <th className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm font-semibold text-slate-700 hidden sm:table-cell">Tarifa</th>
+                      <th className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm font-semibold text-slate-700">Subtotal</th>
+                      <th className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm font-semibold text-slate-700">%</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200">
+                    {activeResult.categories.map((cat, idx) => {
+                      const colors = ['bg-slate-400', 'bg-blue-400', 'bg-orange-400', 'bg-purple-400', 'bg-green-400', 'bg-indigo-400'];
+                      return (
+                        <tr key={cat.category} className="hover:bg-slate-50">
+                          <td className="px-3 sm:px-6 py-3 sm:py-4">
+                            <div className="flex items-center">
+                              <span className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${colors[idx % colors.length]} rounded-full mr-2 sm:mr-3 flex-shrink-0`}></span>
+                              <span className="font-medium text-slate-900 text-xs sm:text-sm">{cat.category}</span>
+                            </div>
+                          </td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-slate-700 text-xs sm:text-sm">{cat.hours.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-slate-700 text-xs sm:text-sm hidden sm:table-cell">{formatCurrency(cat.rate)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right font-semibold text-slate-900 text-xs sm:text-sm">{formatCurrency(cat.subtotal)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-slate-700 text-xs sm:text-sm">{cat.percentage}%</td>
+                        </tr>
+                      );
+                    })}
+                    <tr className="bg-slate-50 font-semibold">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-slate-900 text-xs sm:text-sm">Total</td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-slate-900 text-xs sm:text-sm">{activeResult.totalHours.toFixed(1)}</td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-slate-900 text-xs sm:text-sm hidden sm:table-cell">-</td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-slate-900 text-xs sm:text-sm">{formatCurrency(activeResult.totalAmount)}</td>
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-slate-900 text-xs sm:text-sm">100%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             {/* Day Breakdown by Quincena */}
-            <div className="border-t border-slate-200 pt-6">
-              <h4 className="text-base font-semibold text-slate-900 mb-4">Detalle por Quincena</h4>
+            <div className="border-t border-slate-200 pt-4 sm:pt-6">
+              <h4 className="text-sm sm:text-base font-semibold text-slate-900 mb-3 sm:mb-4">Detalle por Quincena</h4>
               <div className="space-y-4">
                 {quincenaGroups.map(([key, group]) => {
                   const isExpanded = expandedQuincenas.has(key);
@@ -1184,36 +1186,36 @@ Horas:
         </section>
       ) : (
         <section className="mb-6">
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-slate-900">Comparación Detallada</h3>
-              <div className="flex space-x-3">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-slate-900">Comparación Detallada</h3>
+              <div className="flex space-x-2 sm:space-x-3">
                 <button
                   onClick={exportComparisonToCSV}
-                  className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center"
+                  className="px-2 sm:px-4 py-1.5 sm:py-2 border border-slate-300 rounded-lg text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center"
                 >
-                  <FileSpreadsheet className="w-4 h-4 mr-2" />
-                  Exportar CSV
+                  <FileSpreadsheet className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  CSV
                 </button>
                 <button
                   onClick={copyComparisonToClipboard}
-                  className="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center"
+                  className="px-2 sm:px-4 py-1.5 sm:py-2 border border-slate-300 rounded-lg text-xs sm:text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center"
                 >
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copiar resumen
+                  <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  Copiar
                 </button>
               </div>
             </div>
             
             <div className="overflow-x-auto">
-              <p className="text-sm text-slate-500 mb-4">Período: {selectedPeriod.periodLabel}</p>
-              <table className="w-full">
+              <p className="text-xs sm:text-sm text-slate-500 mb-3 sm:mb-4">Período: {selectedPeriod.periodLabel}</p>
+              <table className="w-full min-w-[400px]">
                 <thead className="bg-slate-50 border-b border-slate-200">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Concepto</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">Política Interna</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">Ley Colombiana</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">Diferencia</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-700">Concepto</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm font-semibold text-slate-700">Interno</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm font-semibold text-slate-700">Legal</th>
+                    <th className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm font-semibold text-slate-700">Dif.</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
@@ -1234,36 +1236,36 @@ Horas:
                     return (
                       <>
                         <tr>
-                          <td className="px-6 py-4 font-medium text-slate-900">Total Horas</td>
-                          <td className="px-6 py-4 text-right">{intTotalHours.toFixed(1)}</td>
-                          <td className="px-6 py-4 text-right">{legalTotalHours.toFixed(1)}</td>
-                          <td className="px-6 py-4 text-right">-</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-slate-900 text-xs sm:text-sm">Total Horas</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{intTotalHours.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{legalTotalHours.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">-</td>
                         </tr>
                         <tr>
-                          <td className="px-6 py-4 font-medium text-slate-900">Horas Normales</td>
-                          <td className="px-6 py-4 text-right">{intNormalHrs.toFixed(1)}</td>
-                          <td className="px-6 py-4 text-right">{legalNormalHrs.toFixed(1)}</td>
-                          <td className="px-6 py-4 text-right">{(legalNormalHrs - intNormalHrs).toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-slate-900 text-xs sm:text-sm">Normales</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{intNormalHrs.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{legalNormalHrs.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{(legalNormalHrs - intNormalHrs).toFixed(1)}</td>
                         </tr>
                         <tr>
-                          <td className="px-6 py-4 font-medium text-slate-900">Horas Extra</td>
-                          <td className="px-6 py-4 text-right">{intExtraHrs.toFixed(1)}</td>
-                          <td className="px-6 py-4 text-right">{legalExtraHrs.toFixed(1)}</td>
-                          <td className="px-6 py-4 text-right">{(legalExtraHrs - intExtraHrs).toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-slate-900 text-xs sm:text-sm">Extra</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{intExtraHrs.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{legalExtraHrs.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{(legalExtraHrs - intExtraHrs).toFixed(1)}</td>
                         </tr>
                         <tr>
-                          <td className="px-6 py-4 font-medium text-slate-900">Horas Nocturnas</td>
-                          <td className="px-6 py-4 text-right">{intNightHrs.toFixed(1)}</td>
-                          <td className="px-6 py-4 text-right">{legalNightHrs.toFixed(1)}</td>
-                          <td className="px-6 py-4 text-right text-amber-600 font-medium">
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-slate-900 text-xs sm:text-sm">Nocturnas</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{intNightHrs.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{legalNightHrs.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-amber-600 font-medium text-xs sm:text-sm">
                             {(legalNightHrs - intNightHrs) >= 0 ? '+' : ''}{(legalNightHrs - intNightHrs).toFixed(1)}
                           </td>
                         </tr>
                         <tr>
-                          <td className="px-6 py-4 font-medium text-slate-900">Horas Festivas/Dominicales</td>
-                          <td className="px-6 py-4 text-right">{intHolidayHrs.toFixed(1)}</td>
-                          <td className="px-6 py-4 text-right">{legalHolidayHrs.toFixed(1)}</td>
-                          <td className="px-6 py-4 text-right">
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-slate-900 text-xs sm:text-sm">Festivos</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{intHolidayHrs.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">{legalHolidayHrs.toFixed(1)}</td>
+                          <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm">
                             {(legalHolidayHrs - intHolidayHrs) >= 0 ? '+' : ''}{(legalHolidayHrs - intHolidayHrs).toFixed(1)}
                           </td>
                         </tr>
@@ -1271,11 +1273,11 @@ Horas:
                     );
                   })()}
                   <tr className="bg-slate-50 font-semibold">
-                    <td className="px-6 py-4 text-slate-900">Total a Pagar</td>
-                    <td className="px-6 py-4 text-right text-slate-900">{formatCurrency(selectedPeriod.intAmount)}</td>
-                    <td className="px-6 py-4 text-right text-slate-900">{formatCurrency(selectedPeriod.legalAmount)}</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-slate-900 text-xs sm:text-sm">Total</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-slate-900 text-xs sm:text-sm">{formatCurrency(selectedPeriod.intAmount)}</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-right text-slate-900 text-xs sm:text-sm">{formatCurrency(selectedPeriod.legalAmount)}</td>
                     <td className={cn(
-                      "px-6 py-4 text-right font-bold",
+                      "px-3 sm:px-6 py-3 sm:py-4 text-right font-bold text-xs sm:text-sm",
                       isOverpaid ? 'text-emerald-600' : 'text-[#83152E]'
                     )}>
                       {isOverpaid ? '+' : '-'}{formatCurrency(Math.abs(selectedPeriod.difference))}
@@ -1290,32 +1292,32 @@ Horas:
 
       {/* Alerts Section - filtered by selected period */}
       {selectedPeriod.filteredAlerts.length > 0 && (
-        <section className="mb-8">
-          <div className="space-y-4">
+        <section className="mb-6 sm:mb-8">
+          <div className="space-y-3 sm:space-y-4">
             {selectedPeriod.filteredAlerts.map((alert, idx) => (
               <div
                 key={idx}
                 className={cn(
-                  'border rounded-xl p-6',
+                  'border rounded-xl p-4 sm:p-6',
                   alert.type === 'warning' ? 'bg-amber-50 border-amber-200' : 'bg-blue-50 border-blue-200'
                 )}
               >
                 <div className="flex">
                   <div className="flex-shrink-0">
                     {alert.type === 'warning' ? (
-                      <AlertTriangle className="text-amber-600 w-6 h-6" />
+                      <AlertTriangle className="text-amber-600 w-5 h-5 sm:w-6 sm:h-6" />
                     ) : (
-                      <Info className="text-blue-600 w-6 h-6" />
+                      <Info className="text-blue-600 w-5 h-5 sm:w-6 sm:h-6" />
                     )}
                   </div>
-                  <div className="ml-4">
+                  <div className="ml-3 sm:ml-4">
                     <h4 className={cn(
-                      'text-lg font-semibold mb-2',
+                      'text-sm sm:text-lg font-semibold mb-1 sm:mb-2',
                       alert.type === 'warning' ? 'text-amber-900' : 'text-blue-900'
                     )}>
                       {alert.title}
                     </h4>
-                    <p className={alert.type === 'warning' ? 'text-amber-800' : 'text-blue-800'}>
+                    <p className={cn('text-xs sm:text-base', alert.type === 'warning' ? 'text-amber-800' : 'text-blue-800')}>
                       {alert.message}
                     </p>
                     {alert.affectedDays && alert.affectedDays.length > 0 && (

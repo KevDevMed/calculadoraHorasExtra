@@ -101,25 +101,25 @@ export function TimeEntrySection({
 
   return (
     <section className="mb-6">
-      <div className="bg-white rounded-xl border border-slate-200 p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-              <Clock className="text-[#11143F] w-5 h-5" />
+      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 mb-4 sm:mb-6">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Clock className="text-[#11143F] w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-900">Registro de Tiempo</h3>
-              <p className="text-sm text-slate-500">Ingrese las horas trabajadas</p>
+              <h3 className="text-base sm:text-lg font-semibold text-slate-900">Registro de Tiempo</h3>
+              <p className="text-xs sm:text-sm text-slate-500">Ingrese las horas trabajadas</p>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
-            <span className={cn("text-sm", entryMode === 'simple' ? 'font-medium text-slate-900' : 'text-slate-600')}>
-              Modo simple
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <span className={cn("text-xs sm:text-sm", entryMode === 'simple' ? 'font-medium text-slate-900' : 'text-slate-600')}>
+              Simple
             </span>
             <button
               onClick={() => onModeChange(entryMode === 'simple' ? 'detailed' : 'simple')}
               className={cn(
-                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
+                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0',
                 entryMode === 'detailed' ? 'bg-[#11143F]' : 'bg-slate-200'
               )}
             >
@@ -130,8 +130,8 @@ export function TimeEntrySection({
                 )}
               />
             </button>
-            <span className={cn("text-sm", entryMode === 'detailed' ? 'font-medium text-slate-900' : 'text-slate-600')}>
-              Modo detallado
+            <span className={cn("text-xs sm:text-sm", entryMode === 'detailed' ? 'font-medium text-slate-900' : 'text-slate-600')}>
+              Detallado
             </span>
           </div>
         </div>
@@ -139,13 +139,13 @@ export function TimeEntrySection({
         {entryMode === 'detailed' ? (
           <div>
             <div className="mb-4">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+                <div className="flex items-center justify-center sm:justify-start space-x-2">
                   <button
                     onClick={() => canGoPrev && onWeekChange(weekStarts[activeWeekIndex - 1])}
                     disabled={!canGoPrev}
                     className={cn(
-                      'p-2 rounded-lg border transition-colors',
+                      'p-1.5 sm:p-2 rounded-lg border transition-colors',
                       canGoPrev
                         ? 'border-slate-300 hover:bg-slate-50 text-slate-700'
                         : 'border-slate-200 text-slate-300 cursor-not-allowed'
@@ -153,14 +153,14 @@ export function TimeEntrySection({
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
-                  <span className="text-sm font-medium text-slate-900 min-w-[140px] text-center">
+                  <span className="text-xs sm:text-sm font-medium text-slate-900 min-w-[120px] sm:min-w-[140px] text-center">
                     {formatWeekLabel(activeWeekStart)}
                   </span>
                   <button
                     onClick={() => canGoNext && onWeekChange(weekStarts[activeWeekIndex + 1])}
                     disabled={!canGoNext}
                     className={cn(
-                      'p-2 rounded-lg border transition-colors',
+                      'p-1.5 sm:p-2 rounded-lg border transition-colors',
                       canGoNext
                         ? 'border-slate-300 hover:bg-slate-50 text-slate-700'
                         : 'border-slate-200 text-slate-300 cursor-not-allowed'
@@ -169,15 +169,15 @@ export function TimeEntrySection({
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center justify-center sm:justify-end space-x-2">
                   <div className="relative">
                   <button
                     onClick={() => setShowWeekMenu(!showWeekMenu)}
-                    className="px-4 py-2 bg-gradient-to-r from-[#11143F] to-[#83152E] text-white rounded-lg font-medium hover:opacity-95 transition-colors flex items-center"
+                    className="px-3 sm:px-4 py-2 bg-gradient-to-r from-[#11143F] to-[#83152E] text-white rounded-lg text-sm sm:text-base font-medium hover:opacity-95 transition-colors flex items-center"
                   >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Agregar semana
-                    <ChevronDown className="w-4 h-4 ml-2" />
+                    <Plus className="w-4 h-4 mr-1.5 sm:mr-2" />
+                    <span className="hidden xs:inline">Agregar</span> semana
+                    <ChevronDown className="w-4 h-4 ml-1.5 sm:ml-2" />
                   </button>
                   {showWeekMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-10">

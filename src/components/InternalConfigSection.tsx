@@ -12,27 +12,27 @@ interface InternalConfigSectionProps {
 export function InternalConfigSection({ config, onChange, onReset, payroll, onPayrollChange }: InternalConfigSectionProps) {
   return (
     <section className="mb-6">
-      <div className="bg-white rounded-xl border border-slate-200 p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-[#11143F]/10 rounded-lg flex items-center justify-center">
-              <Building2 className="text-[#11143F] w-5 h-5" />
+      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#11143F]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Building2 className="text-[#11143F] w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-900">Configuración Interna</h3>
-              <p className="text-sm text-slate-500">Política de la empresa</p>
+              <h3 className="text-base sm:text-lg font-semibold text-slate-900">Configuración Interna</h3>
+              <p className="text-xs sm:text-sm text-slate-500">Política de la empresa</p>
             </div>
           </div>
           <button
             onClick={onReset}
-            className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:border-slate-300 transition-all flex items-center"
+            className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:border-slate-300 transition-all flex items-center self-start sm:self-auto"
           >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Restaurar valores
+            <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
+            Restaurar
           </button>
         </div>
 
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
           <div className="flex">
             <AlertTriangle className="text-amber-600 w-5 h-5 mr-3 mt-0.5 flex-shrink-0" />
             <div>
@@ -44,7 +44,7 @@ export function InternalConfigSection({ config, onChange, onReset, payroll, onPa
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">Horas base semanales</label>
             <div className="relative">
@@ -106,18 +106,18 @@ export function InternalConfigSection({ config, onChange, onReset, payroll, onPa
           </div>
         </div>
 
-        <div className="mt-6 border-t border-slate-200 pt-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-[#83152E]/10 rounded-lg flex items-center justify-center">
-              <CalendarCheck className="text-[#83152E] w-5 h-5" />
+        <div className="mt-4 sm:mt-6 border-t border-slate-200 pt-4 sm:pt-6">
+          <div className="flex items-center space-x-2 sm:space-x-3 mb-4">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#83152E]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <CalendarCheck className="text-[#83152E] w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h4 className="text-base font-semibold text-slate-900">Pago atrasado de horas extra</h4>
-              <p className="text-sm text-slate-500">Normativa interna: las horas extra se pagan con desfase (el salario base se paga normal)</p>
+              <h4 className="text-sm sm:text-base font-semibold text-slate-900">Pago atrasado de horas extra</h4>
+              <p className="text-xs sm:text-sm text-slate-500">Las extras se pagan con desfase</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">Desfase de pago (días)</label>
               <div className="relative">

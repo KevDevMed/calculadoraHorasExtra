@@ -10,27 +10,27 @@ interface LegalConfigSectionProps {
 export function LegalConfigSection({ config, onChange, onReset }: LegalConfigSectionProps) {
   return (
     <section className="mb-6">
-      <div className="bg-white rounded-xl border border-slate-200 p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-[#83152E]/10 rounded-lg flex items-center justify-center">
-              <Scale className="text-[#83152E] w-5 h-5" />
+      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#83152E]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Scale className="text-[#83152E] w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-900">Configuración Ley Colombiana</h3>
-              <p className="text-sm text-slate-500">Parámetros legales vigentes 2025</p>
+              <h3 className="text-base sm:text-lg font-semibold text-slate-900">Ley Colombiana</h3>
+              <p className="text-xs sm:text-sm text-slate-500">Parámetros legales 2025</p>
             </div>
           </div>
           <button
             onClick={onReset}
-            className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:border-slate-300 transition-all flex items-center"
+            className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:border-slate-300 transition-all flex items-center self-start sm:self-auto"
           >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Restaurar a ley
+            <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
+            Restaurar
           </button>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
           <div className="flex">
             <Info className="text-blue-600 w-5 h-5 mr-3 mt-0.5 flex-shrink-0" />
             <div>
@@ -42,7 +42,7 @@ export function LegalConfigSection({ config, onChange, onReset }: LegalConfigSec
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">Límite semanal legal</label>
             <div className="relative">
@@ -85,9 +85,9 @@ export function LegalConfigSection({ config, onChange, onReset }: LegalConfigSec
           </div>
         </div>
 
-        <div className="border-t border-slate-200 pt-6">
-          <h4 className="text-sm font-semibold text-slate-900 mb-4">Recargos y multiplicadores legales</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="border-t border-slate-200 pt-4 sm:pt-6">
+          <h4 className="text-sm font-semibold text-slate-900 mb-3 sm:mb-4">Recargos y multiplicadores legales</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
                 Recargo nocturno
